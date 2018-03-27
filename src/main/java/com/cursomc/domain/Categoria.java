@@ -1,20 +1,34 @@
 package com.cursomc.domain;
 
-import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
-public class Categoria implements Serializable {
+@Entity
+public class Categoria  {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	@Id
+    @GeneratedValue
 	private Integer id;
 	private String nome;
+	
+	
+	public Categoria() {
+		
+	}
+	
 	public Categoria(Integer id, String nome) {
 		super();
 		this.id = id;
 		this.nome = nome;
-		
 	}
+	
+	
+	
+	
+	
 	public Integer getId() {
 		return id;
 	}
