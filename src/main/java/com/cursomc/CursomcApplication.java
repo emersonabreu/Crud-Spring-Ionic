@@ -9,10 +9,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.cursomc.domain.Categoria;
 import com.cursomc.domain.Cidade;
+import com.cursomc.domain.Cliente;
 import com.cursomc.domain.Estado;
 import com.cursomc.domain.Produto;
+import com.cursomc.domain.enums.TipoCliente;
 import com.cursomc.repositories.CategoriaRepository;
 import com.cursomc.repositories.CidadeRepository;
+import com.cursomc.repositories.ClienteRepository;
 import com.cursomc.repositories.EstadoRepository;
 import com.cursomc.repositories.ProdutoRepository;
 
@@ -40,6 +43,10 @@ public class CursomcApplication implements CommandLineRunner{
 	
 	@Autowired
 	CidadeRepository cidadeRepository;
+	
+	@Autowired
+	ClienteRepository clienteRepository;
+	
 
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -92,8 +99,21 @@ public class CursomcApplication implements CommandLineRunner{
 		estadoRepository.saveAll(Arrays.asList(est1,est2));
 		
 		cidadeRepository.saveAll(Arrays.asList(c1,c2,c3));
-
 		
+		
+		
+		/**
+		 *Cria os dois Clientes e os Tipos
+		 *e Salva no Banco criando as duas tabelas
+		 */
+
+		Cliente cli1=new Cliente(null, "Maria Silva", "maria@gmail.com", "3638912377",TipoCliente.PESSOAFISICA);
+		Cliente cli2=new Cliente(null, "Laura", "Laura@gmail.com", "91237700087",TipoCliente.PESSOAJURIDICA);
+
+		clienteRepository.saveAll(Arrays.asList(cli1,cli2));
+		
+		System.out.println("A pessoa 1 é:"+cli1.getTipo());
+		System.out.println("A pessoa 1 é:"+cli2.getTipo());
 	}
 	
 	
