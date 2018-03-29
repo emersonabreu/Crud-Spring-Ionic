@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class Categoria implements Serializable {
 	
@@ -17,7 +19,7 @@ public class Categoria implements Serializable {
 	 * 
 	 */
 	@Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	private String nome;
 	
@@ -32,7 +34,11 @@ public class Categoria implements Serializable {
 		this.nome = nome;
 	}
 	
-	
+	/**
+	 * Cria a associação de Categoria com Varios produtos
+	 * 	Usa o @JsonManagedReference para corrigir a referencia ciclica de Categoria e Produto 
+	 */
+	@JsonManagedReference
 	@ManyToMany(mappedBy="categorias")
 	private List<Produto> produtos=new ArrayList<>();
 	

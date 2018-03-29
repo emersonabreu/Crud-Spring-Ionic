@@ -28,7 +28,12 @@ public class CategoriaResources {
 	@Autowired
 	private CategoriaService categoriaService;
 	
-	
+	//End Points PRODUZ JSON
+		/** End Point
+		* Metodo que busca a categoria com todos os produtos relacionados a ela
+		* Ou Lança uma exceção se não encontrar
+		* Como não vai Consumir JSON não precisa Ler o @RequestBody do objeto
+		*/
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
 	public ResponseEntity<?> find(@PathVariable Integer id) {
 		Categoria categoria=categoriaService.buscaPorId(id);

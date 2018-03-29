@@ -12,13 +12,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Produto implements Serializable {
 	
 	private static final long SerialVersionUID =1L;
 
 	@Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
 
 	private Integer id;
 	private String nome;
@@ -34,7 +36,13 @@ public class Produto implements Serializable {
 		this.nome = nome;
 		this.preco = preco;
 	}
-
+	
+	/**
+	 * Cria a associação de produto com Varias categorias
+	 * 	Usa o @JsonBackReference falando que já trouxe as referencias de produtos na categoria 
+	 * Para evitar a referencia ciclica
+	 */
+    @JsonBackReference
 	@ManyToMany
 	@JoinTable(name="PRODUTO_CATEGORIA",
 	joinColumns=@JoinColumn(name="produto_id"),
