@@ -1,24 +1,32 @@
 package com.cursomc.domain;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-
+import javax.persistence.OneToMany;
 import com.cursomc.domain.enums.TipoCliente;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+
+/** 
+* Classe Cliente que recebe um enum tipocliente no construtor
+*  
+*/
 @Entity
 public class Cliente implements Serializable {
 	
-	private static final long SerialVersionUID =1L;
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 1L;
+	
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
@@ -26,15 +34,28 @@ public class Cliente implements Serializable {
 	private String email;
 	private String cpfOuCnpj;
 	private int tipo;
+	
+	
+	/**
+	 * Relacionamento de Muitos pra 1 de Cliente pra Endereco.
+	 * Um Cliente tem várias enderecos
+	 */
+    @OneToMany(mappedBy="cliente")
+	private List<Endereco> enderecos=new ArrayList<>();
+    
+    
+    /**
+	 * Cria uma Entidade Fraca telefone no banco com a JPA
+	 */
+    @ElementCollection
+    @CollectionTable(name="telefone")
+    private Set<String>telefones=new HashSet<>();
 
 	public Cliente() {
 		
 	}
 	
-		
-	
-	
-	
+
 
 	public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipo) {
 		super();
@@ -50,12 +71,23 @@ public class Cliente implements Serializable {
 
 
 
-	public Integer getId() {
-		return id;
+
+
+	public Set<String> getTelefones() {
+		return telefones;
 	}
 
 
 
+	public void setTelefones(Set<String> telefones) {
+		this.telefones = telefones;
+	}
+
+
+
+	public Integer getId() {
+		return id;
+	}
 
 
 
@@ -65,15 +97,9 @@ public class Cliente implements Serializable {
 
 
 
-
-
-
 	public String getNome() {
 		return nome;
 	}
-
-
-
 
 
 
@@ -83,15 +109,9 @@ public class Cliente implements Serializable {
 
 
 
-
-
-
 	public String getEmail() {
 		return email;
 	}
-
-
-
 
 
 
@@ -101,15 +121,9 @@ public class Cliente implements Serializable {
 
 
 
-
-
-
 	public String getCpfOuCnpj() {
 		return cpfOuCnpj;
 	}
-
-
-
 
 
 
@@ -119,15 +133,9 @@ public class Cliente implements Serializable {
 
 
 
-
-
-
 	public int getTipo() {
 		return tipo;
 	}
-
-
-
 
 
 
@@ -137,6 +145,15 @@ public class Cliente implements Serializable {
 
 
 
+	public List<Endereco> getEnderecos() {
+		return enderecos;
+	}
+
+
+
+	public void setEnderecos(List<Endereco> enderecos) {
+		this.enderecos = enderecos;
+	}
 
 
 

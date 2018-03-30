@@ -1,13 +1,19 @@
 package com.cursomc.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 	@Entity
 	public class Cidade implements Serializable {
@@ -26,10 +32,33 @@ import javax.persistence.ManyToOne;
 	@ManyToOne
 	@JoinColumn(name="estado_id")
 	private Estado estado;
-
+	
+	
+	/**
+	 * Relacionamento de Muitos pra 1 de Cidade pra Endereco.
+	 * Uma Cidade tem vários enderecos
+	 */
+    @OneToMany(mappedBy="cidade")
+	private List<Endereco> enderecos=new ArrayList<>();
+    
+     
 	public Cidade() {
 		super();
 	}
+	
+	
+
+	public List<Endereco> getEnderecos() {
+		return enderecos;
+	}
+
+
+
+	public void setEnderecos(List<Endereco> enderecos) {
+		this.enderecos = enderecos;
+	}
+
+
 
 	public Cidade(Integer id, String nome, Estado estado) {
 		super();

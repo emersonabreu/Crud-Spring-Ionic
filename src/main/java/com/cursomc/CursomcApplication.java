@@ -10,12 +10,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.cursomc.domain.Categoria;
 import com.cursomc.domain.Cidade;
 import com.cursomc.domain.Cliente;
+import com.cursomc.domain.Endereco;
 import com.cursomc.domain.Estado;
 import com.cursomc.domain.Produto;
 import com.cursomc.domain.enums.TipoCliente;
 import com.cursomc.repositories.CategoriaRepository;
 import com.cursomc.repositories.CidadeRepository;
 import com.cursomc.repositories.ClienteRepository;
+import com.cursomc.repositories.EnderecoRepository;
 import com.cursomc.repositories.EstadoRepository;
 import com.cursomc.repositories.ProdutoRepository;
 
@@ -46,6 +48,9 @@ public class CursomcApplication implements CommandLineRunner{
 	
 	@Autowired
 	ClienteRepository clienteRepository;
+	
+	@Autowired
+	EnderecoRepository enderecoRepository;
 	
 
 	public static void main(String[] args) {
@@ -90,30 +95,45 @@ public class CursomcApplication implements CommandLineRunner{
 		Cidade c3=new Cidade(null, "Campinas", est2);
 		
 		
+		
 		/**
 		 *Adiciona as cidades aos estados
 		 */
 		est1.getCidades().addAll(Arrays.asList(c1));
 		est2.getCidades().addAll(Arrays.asList(c2,c3));
+		
 
-		estadoRepository.saveAll(Arrays.asList(est1,est2));
-		
-		cidadeRepository.saveAll(Arrays.asList(c1,c2,c3));
-		
-		
-		
 		/**
-		 *Cria os dois Clientes e os Tipos
+		 *Cria os dois Clientes e os Tipos 
 		 *e Salva no Banco criando as duas tabelas
 		 */
 
 		Cliente cli1=new Cliente(null, "Maria Silva", "maria@gmail.com", "3638912377",TipoCliente.PESSOAFISICA);
 		Cliente cli2=new Cliente(null, "Laura", "Laura@gmail.com", "91237700087",TipoCliente.PESSOAJURIDICA);
-
-		clienteRepository.saveAll(Arrays.asList(cli1,cli2));
 		
-		System.out.println("A pessoa 1 é:"+cli1.getTipo());
-		System.out.println("A pessoa 1 é:"+cli2.getTipo());
+		cli1.getTelefones().addAll(Arrays.asList("27363323","93838393"));
+		
+		
+		Endereco e1=new Endereco(null, "Rua das Flores", "300", "Apto 203", "Jardim", "38220834",c1,cli1);
+		Endereco e2=new Endereco(null, "Avenida Matos","105","Sala 800", "centro", "38777012",c2,cli1);
+	
+		cli1.getEnderecos().addAll(Arrays.asList(e1,e2));
+
+		estadoRepository.saveAll(Arrays.asList(est1,est2));
+		
+		cidadeRepository.saveAll(Arrays.asList(c1,c2,c3));
+		
+		 
+		
+		
+		
+		
+		clienteRepository.saveAll(Arrays.asList(cli1,cli2));
+	    
+		enderecoRepository.saveAll(Arrays.asList(e1,e2));
+		
+		
+		
 	}
 	
 	
