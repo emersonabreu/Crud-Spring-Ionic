@@ -36,8 +36,9 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 	
 	/**
 	 * Relacionamento de Muitos pra 1 de Cidade pra Endereco.
-	 * Uma Cidade tem vários enderecos
+	 * Uma Cidade tem vários enderecos e proteçao contra serialização ciclica @JsonManagedReference
 	 */
+	@JsonManagedReference
     @OneToMany(mappedBy="cidade")
 	private List<Endereco> enderecos=new ArrayList<>();
     

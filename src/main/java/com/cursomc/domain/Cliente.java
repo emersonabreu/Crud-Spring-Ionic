@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import com.cursomc.domain.enums.TipoCliente;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 /** 
@@ -38,8 +39,9 @@ public class Cliente implements Serializable {
 	
 	/**
 	 * Relacionamento de Muitos pra 1 de Cliente pra Endereco.
-	 * Um Cliente tem várias enderecos
+	 * Um Cliente tem vários enderecos e proteçao contra serialização ciclica @JsonManagedReference
 	 */
+	@JsonManagedReference
     @OneToMany(mappedBy="cliente")
 	private List<Endereco> enderecos=new ArrayList<>();
     
