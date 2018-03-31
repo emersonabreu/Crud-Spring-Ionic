@@ -13,11 +13,16 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-
+/**
+ * Classe Produto
+ */
 @Entity
 public class Produto implements Serializable {
 	
-	private static final long SerialVersionUID =1L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)

@@ -43,7 +43,17 @@ public class Cliente implements Serializable {
 	 */
 	@JsonManagedReference
     @OneToMany(mappedBy="cliente")
-	private List<Endereco> enderecos=new ArrayList<>();
+	private List<Pedido> enderecos=new ArrayList<>();
+	
+	
+	/**
+	 * Relacionamento de Muitos pra 1 de Cliente pra Pedido.
+	 * Um Cliente pode ter vários pedidos e 
+	 * proteçao contra serialização ciclica @JsonManagedReference
+	 */
+	@JsonManagedReference
+    @OneToMany(mappedBy="cliente")
+	private List<Pedido> pedidos=new ArrayList<>();
     
     
     /**
@@ -66,23 +76,6 @@ public class Cliente implements Serializable {
 		this.email = email;
 		this.cpfOuCnpj = cpfOuCnpj;
 		this.tipo = tipo.getCod();
-	}
-
-
-
-
-
-
-
-
-	public Set<String> getTelefones() {
-		return telefones;
-	}
-
-
-
-	public void setTelefones(Set<String> telefones) {
-		this.telefones = telefones;
 	}
 
 
@@ -147,14 +140,38 @@ public class Cliente implements Serializable {
 
 
 
-	public List<Endereco> getEnderecos() {
+	public List<Pedido> getEnderecos() {
 		return enderecos;
 	}
 
 
 
-	public void setEnderecos(List<Endereco> enderecos) {
+	public void setEnderecos(List<Pedido> enderecos) {
 		this.enderecos = enderecos;
+	}
+
+
+
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
+	}
+
+
+
+	public Set<String> getTelefones() {
+		return telefones;
+	}
+
+
+
+	public void setTelefones(Set<String> telefones) {
+		this.telefones = telefones;
 	}
 
 
