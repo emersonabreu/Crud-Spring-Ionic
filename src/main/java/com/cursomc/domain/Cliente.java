@@ -1,4 +1,5 @@
 package com.cursomc.domain;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,62 +13,44 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
 import com.cursomc.domain.enums.TipoCliente;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
-/** 
-* Classe Cliente que recebe um enum tipocliente no construtor
-*  
-*/
 @Entity
 public class Cliente implements Serializable {
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	private String nome;
 	private String email;
 	private String cpfOuCnpj;
-	private int tipo;
+	private Integer tipo;
 	
 	
 	/**
 	 * Relacionamento de Muitos pra 1 de Cliente pra Endereco.
-	 * Um Cliente tem vários enderecos e proteçao contra serialização ciclica @JsonManagedReference
+	 * Um Cliente tem vários enderecos
 	 */
-	@JsonManagedReference
-    @OneToMany(mappedBy="cliente")
-	private List<Pedido> enderecos=new ArrayList<>();
+	@OneToMany(mappedBy="cliente")
+	private List<Endereco> enderecos = new ArrayList<>();
 	
-	
+	@ElementCollection
+	@CollectionTable(name="TELEFONE")
+	private Set<String> telefones = new HashSet<>();
 	/**
-	 * Relacionamento de Muitos pra 1 de Cliente pra Pedido.
-	 * Um Cliente pode ter vários pedidos e 
-	 * proteçao contra serialização ciclica @JsonManagedReference
+	 * Relacionamento de Muitos pra 1 de Cliente pra Pedido..
+	 * proteçao contra serialização ciclica @JsonIgnore
 	 */
-	@JsonManagedReference
-    @OneToMany(mappedBy="cliente")
-	private List<Pedido> pedidos=new ArrayList<>();
-    
-    
-    /**
-	 * Cria uma Entidade Fraca telefone no banco com a JPA
-	 */
-    @ElementCollection
-    @CollectionTable(name="telefone")
-    private Set<String>telefones=new HashSet<>();
-
-	public Cliente() {
-		
-	}
+	@JsonIgnore
+	@OneToMany(mappedBy="cliente")
+	private List<Pedido> pedidos = new ArrayList<>();
 	
-
+	public Cliente() {
+	}
 
 	public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipo) {
 		super();
@@ -78,103 +61,69 @@ public class Cliente implements Serializable {
 		this.tipo = tipo.getCod();
 	}
 
-
-
 	public Integer getId() {
 		return id;
 	}
-
-
 
 	public void setId(Integer id) {
 		this.id = id;
 	}
 
-
-
 	public String getNome() {
 		return nome;
 	}
-
-
 
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
 
-
-
 	public String getEmail() {
 		return email;
 	}
-
-
 
 	public void setEmail(String email) {
 		this.email = email;
 	}
 
-
-
 	public String getCpfOuCnpj() {
 		return cpfOuCnpj;
 	}
-
-
 
 	public void setCpfOuCnpj(String cpfOuCnpj) {
 		this.cpfOuCnpj = cpfOuCnpj;
 	}
 
-
-
-	public int getTipo() {
-		return tipo;
+	public TipoCliente getTipo() {
+		return TipoCliente.toEnum(tipo);
 	}
 
-
-
-	public void setTipo(int tipo) {
-		this.tipo = tipo;
+	public void setTipo(TipoCliente tipo) {
+		this.tipo = tipo.getCod();
 	}
 
-
-
-	public List<Pedido> getEnderecos() {
+	public List<Endereco> getEnderecos() {
 		return enderecos;
 	}
 
-
-
-	public void setEnderecos(List<Pedido> enderecos) {
+	public void setEnderecos(List<Endereco> enderecos) {
 		this.enderecos = enderecos;
 	}
-
-
-
-	public List<Pedido> getPedidos() {
-		return pedidos;
-	}
-
-
-
-	public void setPedidos(List<Pedido> pedidos) {
-		this.pedidos = pedidos;
-	}
-
-
 
 	public Set<String> getTelefones() {
 		return telefones;
 	}
 
-
-
 	public void setTelefones(Set<String> telefones) {
 		this.telefones = telefones;
 	}
 
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
 
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
+	}
 
 	@Override
 	public int hashCode() {
@@ -199,11 +148,6 @@ public class Cliente implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
-	}
-	
-	
-	
-	
-	
+	}	
 
 }

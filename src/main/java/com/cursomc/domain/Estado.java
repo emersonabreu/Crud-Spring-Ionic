@@ -10,37 +10,32 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Estado implements Serializable {
-	
-
 	private static final long serialVersionUID = 1L;
-	/**
-	 * 
-	 */
+
 	@Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	private String nome;
 	
+	/** Estado 1  N Cidade                  -Cidade
+	 * proteçao contra serialização ciclica @JsonIgnore Basta colocar em um dos lados
+	 */
+	@JsonIgnore
+	@OneToMany(mappedBy="estado")
+	private List<Cidade> cidades = new ArrayList<>();
+	
 	public Estado() {
-		super();
 	}
-	
-	
 
 	public Estado(Integer id, String nome) {
 		super();
 		this.id = id;
 		this.nome = nome;
 	}
-
-	/**
-	 * Relacionamento de Muitos pra 1 de Estado pra Cidade.
-	 * Um Estado tem várias cidades
-	 */
-    @OneToMany(mappedBy="estado")
-	private List<Cidade> cidades=new ArrayList<>();
 
 	public Integer getId() {
 		return id;
@@ -66,8 +61,6 @@ public class Estado implements Serializable {
 		this.cidades = cidades;
 	}
 
-
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -75,8 +68,6 @@ public class Estado implements Serializable {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
-
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -94,6 +85,7 @@ public class Estado implements Serializable {
 			return false;
 		return true;
 	}
-
+	
+	
 	
 }

@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,90 +15,56 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-/**
- * Classe Produto
- */
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
-public class Produto implements Serializable {
-	
-	/**
-	 * 
-	 */
+public class Produto  implements Serializable {
 	private static final long serialVersionUID = 1L;
-
+	
 	@Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	private String nome;
 	private Double preco;
 	
-	public Produto() {
-		
-	}
+	/**  Produto N  N Categoria::: Usa o @JsonIgnore Pra Evitar a Serialização Ciclica
+	 * Cria a associação Muitos pra Muitos Formando uma Nova Tabela @JoinTable(name = "PRODUTO_CATEGORIA"
+	 */
+	@JsonIgnore
+	@ManyToMany
+	@JoinTable(name = "PRODUTO_CATEGORIA",
+		joinColumns = @JoinColumn(name = "produto_id"),
+		inverseJoinColumns = @JoinColumn(name = "categoria_id")
+	)
+	private List<Categoria> categorias = new ArrayList<>();
 	
+	
+	/**  Produto N  N ItemPedido itens :: Usa o @JsonIgnore Pra Evitar a Serialização Ciclica
+	 */
+	@JsonIgnore
+	@OneToMany(mappedBy="id.produto")
+	private Set<ItemPedido> itens = new HashSet<>();
+	
+	public Produto() {
+	}
+
 	public Produto(Integer id, String nome, Double preco) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.preco = preco;
 	}
-	
-	/**
-	 * Cria a associação de produto com Varias categorias
-	 * 	Usa o @JsonBackReference falando que já trouxe as referencias de produtos na categoria 
-	 * Para evitar a referencia ciclica
-	 */
-    @JsonBackReference
-	@ManyToMany
-	@JoinTable(name="produto_categoria",
-	joinColumns=@JoinColumn(name="produto_id"),
-	inverseJoinColumns=@JoinColumn(name="categoria_id")
-	)
-	private List<Categoria> categorias=new ArrayList<>();
-    
-    
-    
-    
 
-    /**
-	 * O produto tem Uma lista de Itens
-	 */
-    @OneToMany(mappedBy="id.produto")
-    private Set<ItemPedido>itens=new HashSet<>();
-    
-	public List<Categoria> getCategorias() {
-		return categorias;
+	@JsonIgnore
+	public List<Pedido> getPedidos() {
+		List<Pedido> lista = new ArrayList<>();
+		for (ItemPedido x : itens) {
+			lista.add(x.getPedido());
+		}
+		return lista;
 	}
 	
 	
-	
-	public Set<ItemPedido> getItens() {
-		return itens;
-	}
-
-	public void setItens(Set<ItemPedido> itens) {
-		this.itens = itens;
-	}
-
-	/**
-	 * Retorna todos os itens de alguma pedido
-	 */
-	public List<Pedido>getPedidos(){
-		List<Pedido>lista=new ArrayList<>();
-	for (ItemPedido x : itens) {
-		lista.add(x.getPedido());
-		
-	}
-	return lista;
-		
-	}
-
-	public void setCategorias(List<Categoria> categorias) {
-		this.categorias = categorias;
-	}
-
 	public Integer getId() {
 		return id;
 	}
@@ -125,6 +89,22 @@ public class Produto implements Serializable {
 		this.preco = preco;
 	}
 
+	public List<Categoria> getCategorias() {
+		return categorias;
+	}
+
+	public void setCategorias(List<Categoria> categorias) {
+		this.categorias = categorias;
+	}
+
+	public Set<ItemPedido> getItens() {
+		return itens;
+	}
+
+	public void setItens(Set<ItemPedido> itens) {
+		this.itens = itens;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -149,9 +129,6 @@ public class Produto implements Serializable {
 			return false;
 		return true;
 	}
+	
 
-	
-	
-	
-	
 }
