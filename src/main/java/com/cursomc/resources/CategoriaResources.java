@@ -1,5 +1,7 @@
 package com.cursomc.resources;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cursomc.domain.Categoria;
+import com.cursomc.dto.CategoriaDTO;
 import com.cursomc.services.CategoriaService;
 
 	/** 
@@ -57,6 +60,30 @@ public class CategoriaResources {
 			
 	}
 	
+	
+	//End Points PRODUZ JSON
+		/** 
+		* Metodo que traz uma lista de  todas as Categorias e seus Produtos
+		* pega só as categorias joga em outra lista e a retorna.
+		*  
+		*/
+	@RequestMapping(method=RequestMethod.GET, value="/dto",
+			produces=MediaType.APPLICATION_JSON_VALUE)
+			public ResponseEntity<List<CategoriaDTO>> findAll() {
+		
+		        /**Lista as categorias com todos os objetos relacionados a ela
+		        */
+				List<Categoria>list=categoriaService.findAll();
+				
+				/**Tranforma em uma outra lista que retorna só os atributos de Categoria
+				 * usando o método da CategoriaDTO
+			     */
+				List<CategoriaDTO>listDTO=list.stream().map(obj->new CategoriaDTO(obj)).collect(Collectors.toList());
+				return new ResponseEntity<List<CategoriaDTO>> (listDTO,HttpStatus.OK);
+					
+			}
+	
+	
 	//End Points CONSOME JSON
 	/** Salva e Retorna o que Salvou
 	 * Metodo que pega o objeto JSON e salva no model cliente.
@@ -72,6 +99,39 @@ public class CategoriaResources {
 		
 		return new ResponseEntity<>(categoriaCadastrada,HttpStatus.CREATED);
 			
+	}
+	
+	//End Points CONSOME JSON
+		/** Altera Categoria
+		 * 
+		 */
+	@RequestMapping(method=RequestMethod.PUT, value="/alterar",
+			consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+			public ResponseEntity<Categoria> alterarCliente(@RequestBody Categoria categoria) {
+		Categoria categoriaAlterado=categoriaService.alterar(categoria);;
+				
+				
+				return new ResponseEntity<Categoria>(categoriaAlterado,HttpStatus.OK);
+					
+			}
+	
+	/** Não PRODUZ NEM CONSOME JSON
+	 * Só exclui um objeto pelo seu id passado como parametro na url
+	 */
+	@RequestMapping(method=RequestMethod.DELETE, value="/{id}")
+	public ResponseEntity<Categoria> excluirCategoria(@PathVariable Integer id) {
+		
+		Categoria categoriaEncontrado=categoriaService.buscaPorId(id);
+		 
+		 if(categoriaEncontrado==null) {
+			 
+			 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		 }
+		 
+		 categoriaService.excluir(categoriaEncontrado);
+		 return new ResponseEntity<>(HttpStatus.OK);
+
+			 
 	}
 
 }

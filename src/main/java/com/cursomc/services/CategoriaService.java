@@ -1,6 +1,7 @@
 package com.cursomc.services;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +26,27 @@ public class CategoriaService {
 	
 	
 	public Categoria cadastrar(Categoria categoria) {
+		
 		return categoriaRepository.save(categoria);
 		
+		}
+	
+	
+	public Categoria alterar(Categoria categoria) {
 		
+		
+		return categoriaRepository.save(categoria);
+
 			
 		}
+	
+	
+	public void excluir(Categoria categoria) {
+		
+		categoriaRepository.delete(categoria);
+			
+		}
+
 	
 	
 	public Collection<Categoria> buscaTodos() {
@@ -38,6 +55,15 @@ public class CategoriaService {
 		return categoriaRepository.findAll();
 			
 		}
+	
+public List<Categoria> findAll() {
+		
+		
+		return categoriaRepository.findAll();
+			
+		}
+	
+	
 	
 
 	/**

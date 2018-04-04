@@ -57,6 +57,10 @@ public class ClienteResources {
 			
 	}
 	
+	
+	
+	
+	
 	//End Points CONSOME JSON
 	/** Salva e Retorna o que Salvou
 	 * Metodo que pega o objeto JSON e salva no model cliente.
