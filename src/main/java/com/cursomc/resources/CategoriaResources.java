@@ -3,6 +3,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -125,6 +127,36 @@ public class CategoriaResources {
 		return new ResponseEntity<>(categoriaCadastrada,HttpStatus.CREATED);
 			
 	}
+	
+	
+	//End Points CONSOME JSON
+		/** Validando dados com DTO
+		*/
+		@RequestMapping(method=RequestMethod.POST, value="/validar",
+		consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+		public ResponseEntity<?> cadastrar(@Valid @RequestBody CategoriaDTO categoriaDTO) {
+			/** Converte o CategoriaDTO em Categoria 
+			*/
+			Categoria categoriaCadastrada = categoriaService.fromDTO(categoriaDTO);
+			
+			return new ResponseEntity<>(categoriaCadastrada,HttpStatus.CREATED);
+				
+		}
+		
+
+		//End Points CONSOME JSON
+				/** Altera Categoria com Validação DTO
+				 * 
+				 */
+			@RequestMapping(method=RequestMethod.PUT, value="/alterarComValidacao",
+					consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
+					public ResponseEntity<?> alterarCategoria(@Valid @RequestBody CategoriaDTO categoriaDTO) {
+				Categoria categoriaAlterado=categoriaService.fromDTO(categoriaDTO);
+						
+						
+						return new ResponseEntity<>(categoriaAlterado,HttpStatus.OK);			
+	
+			}
 	
 	//End Points CONSOME JSON
 		/** Altera Categoria

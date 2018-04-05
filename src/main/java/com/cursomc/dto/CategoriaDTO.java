@@ -2,6 +2,9 @@ package com.cursomc.dto;
 
 import java.io.Serializable;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.cursomc.domain.Categoria;
 
 
@@ -15,6 +18,11 @@ public class CategoriaDTO implements Serializable {
 	
 	
 	private Integer id;
+	@SuppressWarnings("deprecation")
+	/** Validando os campos com hibernate.validator
+	 */
+	@NotEmpty(message="Campo Obrigatorio")
+	@Length(min=5,max=80)
 	private String nome;
 	public CategoriaDTO() {
 		

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.cursomc.domain.Categoria;
+import com.cursomc.dto.CategoriaDTO;
 import com.cursomc.repositories.CategoriaRepository;
 import com.cursomc.services.exceptions.ObjectNotFoundException;
 
@@ -57,6 +58,16 @@ public class CategoriaService {
 	public List<Categoria> findAll() {
 
 		return categoriaRepository.findAll();
+
+	}
+	
+	
+	/**
+	 * Metodo que Cria uma Categoria a partir do DTO
+	 */
+	public Categoria fromDTO(CategoriaDTO categoriaDTO ) {
+
+		return new Categoria(categoriaDTO.getId(), categoriaDTO.getNome());
 
 	}
 	
