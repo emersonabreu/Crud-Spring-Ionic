@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 
+import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -131,8 +133,11 @@ public class CategoriaResources {
 	
 	//End Points CONSOME JSON
 		/** Validando dados com DTO
+		 * Salva a Categoria com as condicoes definidas na categoriaDTO
+		 * @NotEmpty(message="Campo Obrigatorio")
+		 * @Length(min=5,max=80)
 		*/
-		@RequestMapping(method=RequestMethod.POST, value="/validar",
+		@RequestMapping(method=RequestMethod.POST, value="/salvarComValidacao",
 		consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
 		public ResponseEntity<?> cadastrar(@Valid @RequestBody CategoriaDTO categoriaDTO) {
 			/** Converte o CategoriaDTO em Categoria 
