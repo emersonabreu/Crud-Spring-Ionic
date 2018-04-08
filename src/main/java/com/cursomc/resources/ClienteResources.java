@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cursomc.domain.Cliente;
 import com.cursomc.dto.ClienteDTO;
+import com.cursomc.dto.ClienteNewDTO;
 import com.cursomc.services.ClienteService;
 
 	/** 
@@ -48,6 +49,36 @@ public class ClienteResources {
 	
 		}
 	
+	// End Points CONSOME JSON
+	/**
+	 * Salva e Retorna o que Salvou Metodo que pega o objeto JSON e salva no model
+	 * cliente. O @RequestBody lê o corpo do JSON e salva no objeto Após salvar,
+	 * joga ele dentro de um Map/lista Depois faz o inverso através do
+	 * ResponseEntity, devolvendo o Objeto para o browser consome e produz JSON
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/salvar", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> cadastrar(@RequestBody Cliente cliente) {
+
+		Cliente clienteCadastrada = clienteService.insert(cliente);
+
+		return new ResponseEntity<>(clienteCadastrada, HttpStatus.CREATED);
+
+	}
+	
+	// End Points CONSOME JSON
+	/**
+	 * Salvar o primeiro Cliente Usando a ClienteNewDTO
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/salvarOprimeiro", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> cadastrar(@RequestBody ClienteNewDTO clienteNewDTO) {
+
+		Cliente clienteCadastrada = clienteService.fromDTO(clienteNewDTO);
+		clienteCadastrada = clienteService.cadastrar(clienteCadastrada);
+
+		return new ResponseEntity<>(clienteCadastrada, HttpStatus.CREATED);
+
+	}
+	
 	
 	//End Points PRODUZ JSON
 	/** 
@@ -59,7 +90,7 @@ public class ClienteResources {
 	produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Cliente>> buscarTodasClientes() {
 
-		Collection<Cliente>clientesBuscados=clienteService.buscaTodos();
+		Collection<Cliente>clientesBuscados=clienteService.findAll();
 		return new ResponseEntity<Collection<Cliente>> (clientesBuscados,HttpStatus.OK);
 			
 	}
@@ -106,28 +137,8 @@ public class ClienteResources {
 			return new ResponseEntity<Page<ClienteDTO>> (listDTO,HttpStatus.OK);
 				
 		}
-	
-	
-	//End Points CONSOME JSON
-	/** Salva e Retorna o que Salvou
-	 * Metodo que pega o objeto JSON e salva no model cliente.
-	 * O @RequestBody lê o corpo do JSON e salva no objeto
-	 * Após salvar, joga ele dentro de um Map/lista
-	 * Depois faz o inverso através do ResponseEntity, devolvendo o Objeto para o browser 
-	 * consome e produz JSON
-	 */
-	@RequestMapping(method=RequestMethod.POST, value="/salvar",
-	consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> cadastrar(@RequestBody Cliente cliente) {
 		
-		Cliente clienteCadastrada = clienteService.cadastrar(cliente);
-		
-		return new ResponseEntity<>(clienteCadastrada,HttpStatus.CREATED);
 			
-	}
-	
-	
-	
 	
 	//End Points CONSOME JSON
 	/** Altera Cliente com Validação DTO
