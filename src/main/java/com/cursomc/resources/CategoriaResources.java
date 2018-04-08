@@ -162,6 +162,8 @@ public class CategoriaResources {
 						return new ResponseEntity<>(categoriaAlterado,HttpStatus.OK);			
 	
 			}
+			
+			
 	
 	//End Points CONSOME JSON
 		/** Altera Categoria
@@ -176,6 +178,7 @@ public class CategoriaResources {
 				return new ResponseEntity<Categoria>(categoriaAlterado,HttpStatus.OK);
 					
 			}
+	
 	
 	/** Não PRODUZ NEM CONSOME JSON
 	 * Só exclui um objeto pelo seu id passado como parametro na url

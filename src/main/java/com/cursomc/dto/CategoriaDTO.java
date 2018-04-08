@@ -18,7 +18,7 @@ public class CategoriaDTO implements Serializable {
 	
 	
 	private Integer id;
-	/** Validando os campos com hibernate.validator
+	/** Validando os campos com javax.validation.validator
 	 */
 	@NotEmpty(message="Campo Obrigatorio")
 	@Length(min=5,max=80)
