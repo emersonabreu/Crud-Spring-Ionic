@@ -1,11 +1,10 @@
 package com.cursomc.domain;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -13,7 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-
 import com.cursomc.domain.enums.TipoCliente;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -34,8 +32,9 @@ public class Cliente implements Serializable {
 	/**
 	 * Relacionamento de Muitos pra 1 de Cliente pra Endereco.
 	 * Um Cliente tem vários enderecos
+	 * O cascade=CascadeType.ALL Permite deletar o Cliente e os seus Enderecos
 	 */
-	@OneToMany(mappedBy="cliente")
+	@OneToMany(mappedBy="cliente", cascade=CascadeType.ALL)
 	private List<Endereco> enderecos = new ArrayList<>();
 	
 	@ElementCollection
@@ -44,6 +43,7 @@ public class Cliente implements Serializable {
 	/**
 	 * Relacionamento de Muitos pra 1 de Cliente pra Pedido..
 	 * proteçao contra serialização ciclica @JsonIgnore
+	 *
 	 */
 	@JsonIgnore
 	@OneToMany(mappedBy="cliente")

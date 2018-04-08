@@ -125,7 +125,7 @@ public class ClienteService {
         	clienteRepository.delete(cliente);
 		} catch (DataIntegrityViolationException exception) {
 			
-			throw new DataIntegrityViolationException("Não pode Excluir Pois existe Entidades Relacionadas",exception.getMostSpecificCause());
+			throw new DataIntegrityViolationException("Não pode Excluir Pois O Cliente Tem Pedidos Relacionados",exception.getMostSpecificCause());
 		}
 		
 
