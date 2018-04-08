@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import com.cursomc.domain.Categoria;
 import com.cursomc.domain.Categoria;
 import com.cursomc.dto.CategoriaDTO;
 import com.cursomc.repositories.CategoriaRepository;
@@ -38,10 +40,42 @@ public class CategoriaService {
 		return categoriaRepository.save(categoria);
 
 	}
+	
+	
+	/** Altera com os tratamentos nos relacionamentos
+	 * Recupera os dados do Categoria pelo id que veio no End Point Http, busca a Categoria no Banco com todos os 
+	 * dados relacionados preenchidos, salva só os atributos da classe Categoria e insere os dados relacionados que já estavam.
+	 */
+	public Categoria update(Categoria categoria) {
+
+		Categoria catEncontrado=buscaPorId(categoria.getId());
+		
+		updateData(catEncontrado,categoria);
+		
+		return categoriaRepository.save(catEncontrado);
+
+	}
+	
+	/** Função que altera o nome daCategoria que veio do Banco
+	 */
+	private void updateData(Categoria catEncontrado,Categoria categoria) {
+		catEncontrado.setNome(categoria.getNome());
+		
+		
+		
+	}
+	
+	
 
 	public void excluir(Categoria categoria) {
+		
+		  try {
+				categoriaRepository.delete(categoria);
 
-		categoriaRepository.delete(categoria);
+			} catch (DataIntegrityViolationException exception) {
+				
+		throw new DataIntegrityViolationException("Não pode Excluir Pois existe Entidades Relacionadas",exception.getMostSpecificCause());
+			}
 
 	}
 

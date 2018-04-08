@@ -166,13 +166,13 @@ public class CategoriaResources {
 			
 	
 	//End Points CONSOME JSON
-		/** Altera Categoria
-		 * 
+		/** Altera Categoria com os tratamentos nos relacionamentos
+		 * usando o metodo update(Categoria categoria):
 		 */
 	@RequestMapping(method=RequestMethod.PUT, value="/alterar",
 			consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
 			public ResponseEntity<Categoria> alterarCliente(@RequestBody Categoria categoria) {
-		Categoria categoriaAlterado=categoriaService.alterar(categoria);;
+		Categoria categoriaAlterado=categoriaService.update(categoria);;
 				
 				
 				return new ResponseEntity<Categoria>(categoriaAlterado,HttpStatus.OK);

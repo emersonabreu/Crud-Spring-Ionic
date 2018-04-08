@@ -145,7 +145,7 @@ public class ClienteResources {
 	
 
 	//End Points CONSOME JSON
-			/** Altera Cliente
+			/** Altera Cliente 
 			 * 
 			 */
 		@RequestMapping(method=RequestMethod.PUT, value="/alterar",
