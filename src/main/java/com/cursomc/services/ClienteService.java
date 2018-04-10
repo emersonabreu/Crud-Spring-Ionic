@@ -74,13 +74,11 @@ public class ClienteService {
 		
 		cliente.setId(null);
 		cliente=clienteRepository.save(cliente);
-		
 		enderecoRepository.saveAll(cliente.getEnderecos());
 		return cliente;	
 		}
 	
 	
-		
 	
 	/** Altera com os tratamentos nos relacionamentos
 	 * Recupera os dados do Cliente pelo id que veio no End Point Http, busca o Cliente no Banco com todos os 
@@ -158,32 +156,22 @@ public class ClienteService {
 	/** Insere um Cliente no Banco a partir da ClienteNewDTO
 	 * Obs: Instancia o Cliente, A Cidade, O Endereco a Partir da ClienteNewDTO
 	 * Sobrescreve o metodo fromDTO()
+	 * OBS:A ClienteNewDTO chama a interface ClienteInsert que Implementa a 
+	 * ClienteInsertValidator
 	 */
-	public Cliente fromDTO(ClienteNewDTO clienteNewDTO ) {
-
-	Cliente cliente=new Cliente(null,clienteNewDTO.getNome(),
-			clienteNewDTO.getEmail(),clienteNewDTO.getCpfOuCnpj(),
-			TipoCliente.toEnum(clienteNewDTO.getTipo()));
-	
-    
-	Cidade cidade = new Cidade(clienteNewDTO.getCidadeId(), null, null);
-	
-	Endereco endereco = new Endereco(null, clienteNewDTO.getLogradouro(),clienteNewDTO.getNumero(),
-			clienteNewDTO.getComplemento(),clienteNewDTO.getBairro(),clienteNewDTO.getCep(), cliente,cidade);
-	
-	cliente.getEnderecos().add(endereco);
-	cliente.getTelefones().add(clienteNewDTO.getTelefone1());
-	
-	if (clienteNewDTO.getTelefone2()!=null) {
-		cliente.getTelefones().add(clienteNewDTO.getTelefone2());
-	}
-	if (clienteNewDTO.getTelefone3()!=null) {
-		cliente.getTelefones().add(clienteNewDTO.getTelefone3());
-		
-	}
-
-	return cliente;
-	
+	public Cliente fromDTO(ClienteNewDTO objDto) {
+		Cliente cli = new Cliente(null, objDto.getNome(), objDto.getEmail(), objDto.getCpfOuCnpj(), TipoCliente.toEnum(objDto.getTipo()));
+		Cidade cid = new Cidade(objDto.getCidadeId(), null, null);
+		Endereco end = new Endereco(null, objDto.getLogradouro(), objDto.getNumero(), objDto.getComplemento(), objDto.getBairro(), objDto.getCep(), cli, cid);
+		cli.getEnderecos().add(end);
+		cli.getTelefones().add(objDto.getTelefone1());
+		if (objDto.getTelefone2()!=null) {
+			cli.getTelefones().add(objDto.getTelefone2());
+		}
+		if (objDto.getTelefone3()!=null) {
+			cli.getTelefones().add(objDto.getTelefone3());
+		}
+		return cli;
 	}
 	
 	

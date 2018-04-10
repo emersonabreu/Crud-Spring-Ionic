@@ -1,4 +1,5 @@
 package com.cursomc.resources;
+import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.cursomc.domain.Cliente;
 import com.cursomc.dto.ClienteDTO;
 import com.cursomc.dto.ClienteNewDTO;
@@ -68,9 +68,10 @@ public class ClienteResources {
 	// End Points CONSOME JSON
 	/**
 	 * Salvar o primeiro Cliente Usando a ClienteNewDTO
+	 * Usa o valid pra validar os dados
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/salvarOprimeiro", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> cadastrar(@RequestBody ClienteNewDTO clienteNewDTO) {
+	@RequestMapping(method = RequestMethod.POST)
+	public ResponseEntity<?> cadastrar(@Valid @RequestBody ClienteNewDTO clienteNewDTO) {
 
 		Cliente clienteCadastrada = clienteService.fromDTO(clienteNewDTO);
 		clienteCadastrada = clienteService.cadastrar(clienteCadastrada);
