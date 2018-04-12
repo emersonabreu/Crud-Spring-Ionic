@@ -114,6 +114,28 @@ public class ClienteService {
 	
 	
 	
+	/** Altera com validação
+	 */
+	public Cliente update(ClienteDTO clienteDTO) {
+
+		Cliente cliEncontrado=buscaPorId(clienteDTO.getId());
+		
+		updateData(cliEncontrado,clienteDTO);
+		
+		return clienteRepository.save(cliEncontrado);
+
+	}
+	
+	/** Função que altera o nome e o email no Cliente que veio do Banco
+	 */
+	private void updateData(Cliente cliEncontrado,ClienteDTO clienteDTO) {
+		cliEncontrado.setNome(clienteDTO.getNome());
+		cliEncontrado.setEmail(clienteDTO.getEmail());
+		
+
+		
+	}
+	
 	
 	
 	

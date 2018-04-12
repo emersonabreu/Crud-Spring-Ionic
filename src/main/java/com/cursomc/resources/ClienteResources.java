@@ -1,4 +1,5 @@
 package com.cursomc.resources;
+
 import java.net.URI;
 import java.util.Collection;
 import java.util.List;
@@ -22,33 +23,41 @@ import com.cursomc.dto.ClienteDTO;
 import com.cursomc.dto.ClienteNewDTO;
 import com.cursomc.services.ClienteService;
 
-	/** 
-	* Classe controladora que Faz as requisições para a Classe de Serviço que por sua 
-	* vez requisita a Classe Repository que extende a JPARepository/DAO que manipula o Banco de Dados 
-	*  
-	*/
+/**
+ * Classe controladora que Faz as requisições para a Classe de Serviço que por
+ * sua vez requisita a Classe Repository que extende a JPARepository/DAO que
+ * manipula o Banco de Dados
+ * 
+ */
 
 @RestController
-@RequestMapping(value="/clientes")
+@RequestMapping(value = "/clientes")
 public class ClienteResources {
-	
-	
+
 	@Autowired
 	private ClienteService clienteService;
-	
-	//End Points PRODUZ JSON
-		/** End Point
-		* Metodo que busca a cliente com todos os produtos relacionados a ela
-		* Ou Lança uma exceção se não encontrar
-		* Como não vai Consumir JSON não precisa Ler o @RequestBody do objeto
-		*/
-	@RequestMapping(value="/{id}", method=RequestMethod.GET)
+
+	// End Points PRODUZ JSON
+	/**
+	 * End Point Metodo que busca a cliente com todos os produtos relacionados a ela
+	 * Ou Lança uma exceção se não encontrar Como não vai Consumir JSON não precisa
+	 * Ler o @RequestBody do objeto
+	 */
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> find(@PathVariable Integer id) {
-		Cliente cliente=clienteService.buscaPorId(id);
-		return  ResponseEntity.ok().body(cliente);
+		Cliente cliente = clienteService.buscaPorId(id);
+		return ResponseEntity.ok().body(cliente);
+
+	}
 	
-		}
 	
+	
+	
+	
+	
+	
+	
+
 	// End Points CONSOME JSON
 	/**
 	 * Salva e Retorna o que Salvou Metodo que pega o objeto JSON e salva no model
@@ -65,10 +74,16 @@ public class ClienteResources {
 
 	}
 	
+	
+	
+	
+	
+	
+
 	// End Points CONSOME JSON
 	/**
-	 * Salvar o primeiro Cliente Usando a ClienteNewDTO
-	 * Usa o valid pra validar os dados
+	 * Salvar o primeiro Cliente Usando a ClienteNewDTO Usa o valid pra validar os
+	 * dados
 	 */
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<?> cadastrar(@Valid @RequestBody ClienteNewDTO clienteNewDTO) {
@@ -81,117 +96,130 @@ public class ClienteResources {
 	}
 	
 	
-	//End Points PRODUZ JSON
-	/** 
-	* Metodo que retorna uma lista de objetos no formato JSON para o browser.
-	* Produz JSON 
-	* Como não vai Consumir JSON não precisa Ler o @RequestBody do objeto
-	*/
-	@RequestMapping(method=RequestMethod.GET, value="/todas",
-	produces=MediaType.APPLICATION_JSON_VALUE)
+	
+	
+	
+	
+
+	// End Points PRODUZ JSON
+	/**
+	 * Metodo que retorna uma lista de objetos no formato JSON para o browser.
+	 * Produz JSON Como não vai Consumir JSON não precisa Ler o @RequestBody do
+	 * objeto
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/todas", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Cliente>> buscarTodasClientes() {
 
-		Collection<Cliente>clientesBuscados=clienteService.findAll();
-		return new ResponseEntity<Collection<Cliente>> (clientesBuscados,HttpStatus.OK);
-			
+		Collection<Cliente> clientesBuscados = clienteService.findAll();
+		return new ResponseEntity<Collection<Cliente>>(clientesBuscados, HttpStatus.OK);
+
 	}
 	
 	
-	//End Points PRODUZ JSON 
-			/** 
-			* Metodo que traz uma lista de  todas as Clientes e seus Produtos
-			* pega só as clientes joga em outra lista e a retorna.
-			*  
-			*/
-		@RequestMapping(method=RequestMethod.GET, value="/dto",
-				produces=MediaType.APPLICATION_JSON_VALUE)
-				public ResponseEntity<List<ClienteDTO>> findAll() {
-			
-			        /**Lista os clientes com todos os objetos relacionados a ele
-			        */
-					List<Cliente>list=clienteService.findAll();
-					
-					/**Tranforma em uma outra lista que retorna só os atributos de Cliente
-					 * usando o método da ClienteDTO
-				     */
-					List<ClienteDTO>listDTO=list.stream().map(obj->new ClienteDTO(obj)).collect(Collectors.toList());
-					return new ResponseEntity<List<ClienteDTO>> (listDTO,HttpStatus.OK);
-						
-				}
-		
-		
-		//
-		/** 
-		* End Points que faz a Paginação da Cliente
-		*/
-		@RequestMapping(method=RequestMethod.GET, value="/page",
-		produces=MediaType.APPLICATION_JSON_VALUE)
-		public ResponseEntity<Page<ClienteDTO>> buscaClientesPorPaginacao(
-				@RequestParam(value="page",defaultValue="0") Integer page,
-				@RequestParam(value="linesPerPage",defaultValue="24")Integer linesPerPage,
-			    @RequestParam(value="direction",defaultValue="ASC") String direction,
-			    @RequestParam(value="orderBy",defaultValue="nome") String orderBy) {
-
-			Page<Cliente>clientesBuscadas=clienteService.findPage(page, linesPerPage, direction, orderBy);
-			Page<ClienteDTO>listDTO=clientesBuscadas.map(obj->new ClienteDTO(obj));
-
-			return new ResponseEntity<Page<ClienteDTO>> (listDTO,HttpStatus.OK);
-				
-		}
-		
-			
 	
-	//End Points CONSOME JSON
-	/** Altera Cliente com Validação DTO
+	
+	
+	
+
+	// End Points PRODUZ JSON
+	/**
+	 * Metodo que traz uma lista de todas os Clientes e seus Produtos pega só os
+	 * clientes joga em outra lista e a retorna.
 	 * 
 	 */
-@RequestMapping(method=RequestMethod.PUT, value="/alterarComValidacao",
-		consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
-		public ResponseEntity<?> alterarCliente(@Valid @RequestBody ClienteDTO clienteDTO) {
-	Cliente clienteAlterado=clienteService.fromDTO(clienteDTO);
-			
-			
-			return new ResponseEntity<>(clienteAlterado,HttpStatus.OK);			
+	@RequestMapping(method = RequestMethod.GET, value = "/dto", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<ClienteDTO>> findAll() {
 
-}
-	
-
-	//End Points CONSOME JSON
-			/** Altera Cliente 
-			 * 
-			 */
-		@RequestMapping(method=RequestMethod.PUT, value="/alterar",
-				consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
-				public ResponseEntity<Cliente> alterarCliente(@RequestBody Cliente cliente) {
-			Cliente clienteAlterado=clienteService.update(cliente);
-					
-					
-					return new ResponseEntity<Cliente>(clienteAlterado,HttpStatus.OK);
-						
-				}
-		
-		
-		/** Não PRODUZ NEM CONSOME JSON
-		 * Só exclui um objeto pelo seu id passado como parametro na url
+		/**
+		 * Lista os clientes com todos os objetos relacionados a ele
 		 */
-		@RequestMapping(method=RequestMethod.DELETE, value="/{id}")
-		public ResponseEntity<Cliente> excluirCliente(@PathVariable Integer id) {
-			
-			Cliente clienteEncontrado=clienteService.buscaPorId(id);
-			 
-			 if(clienteEncontrado==null) {
-				 
-				 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			 }
-			 
-			 clienteService.excluir(clienteEncontrado);
-			 return new ResponseEntity<>(HttpStatus.OK);
+		List<Cliente> list = clienteService.findAll();
 
-				 
-		}
+		/**
+		 * Tranforma em uma outra lista que retorna só os atributos de Cliente usando o
+		 * método da ClienteDTO
+		 */
+		List<ClienteDTO> listDTO = list.stream().map(obj -> new ClienteDTO(obj)).collect(Collectors.toList());
+		return new ResponseEntity<List<ClienteDTO>>(listDTO, HttpStatus.OK);
 
 	}
-		
+	
+	
+	
+	
+	
+	
+	
 
+	//
+	/**
+	 * End Points que faz a Paginação da Cliente
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/page", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Page<ClienteDTO>> buscaClientesPorPaginacao(
+			@RequestParam(value = "page", defaultValue = "0") Integer page,
+			@RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
+			@RequestParam(value = "direction", defaultValue = "ASC") String direction,
+			@RequestParam(value = "orderBy", defaultValue = "nome") String orderBy) {
 
+		Page<Cliente> clientesBuscadas = clienteService.findPage(page, linesPerPage, direction, orderBy);
+		Page<ClienteDTO> listDTO = clientesBuscadas.map(obj -> new ClienteDTO(obj));
 
+		return new ResponseEntity<Page<ClienteDTO>>(listDTO, HttpStatus.OK);
+
+	}
+	
+	
+	
+	
+
+	// End Points CONSOME JSON
+	/**
+	 * Altera Cliente com Validação
+	 * 
+	 */
+	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
+	public ResponseEntity<Cliente> alteraValidandoCliente(@Valid @RequestBody ClienteDTO clienteDTO,@PathVariable Integer id) {
+		Cliente clienteAlterado = clienteService.fromDTO(clienteDTO);
+		clienteAlterado.setId(id);
+		clienteAlterado=clienteService.update(clienteAlterado);
+		return new ResponseEntity<Cliente>(clienteAlterado, HttpStatus.OK);
+
+	}
+	
+
+	// End Points CONSOME JSON
+	/**
+	 * Altera Cliente 
+	 * 
+	 */
+	@RequestMapping(method = RequestMethod.PUT, value = "/alterar", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Cliente> alterarCliente(@RequestBody Cliente cliente) {
+		Cliente clienteAlterado = clienteService.update(cliente);
+
+		return new ResponseEntity<Cliente>(clienteAlterado, HttpStatus.OK);
+
+	}
+	
+	
+
+	/**
+	 * Não PRODUZ NEM CONSOME JSON Só exclui um objeto pelo seu id passado como
+	 * parametro na url
+	 */
+	@RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+	public ResponseEntity<Cliente> excluirCliente(@PathVariable Integer id) {
+
+		Cliente clienteEncontrado = clienteService.buscaPorId(id);
+
+		if (clienteEncontrado == null) {
+
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		clienteService.excluir(clienteEncontrado);
+		return new ResponseEntity<>(HttpStatus.OK);
+
+	}
+
+}

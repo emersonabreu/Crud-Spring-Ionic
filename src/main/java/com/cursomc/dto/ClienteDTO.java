@@ -6,13 +6,18 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotEmpty;
 
 import com.cursomc.domain.Cliente;
+import com.cursomc.services.validation.ClienteInsert;
+import com.cursomc.services.validation.ClienteUpdate;
+
 
 
 
 /** Classe Usada quando precisar trazer só os clientes que estão no banco.
  * Como a model Cliente está relacionada com uma Lista de Enderecos, Telefone e a Enum TipoCliente:Fisica ou Juridica
  *  atravéz da ClienteDTO são trazidos só os dados do Cliente. A Classe ClienteDTO resolve esse problema.
+ * OBS: A anotação @ClienteInsert, chama a interface que aciona a classe ClienteUpdateValidator que faz a validação
  */
+@ClienteUpdate
 public class ClienteDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
@@ -26,9 +31,6 @@ public class ClienteDTO implements Serializable {
 	@NotEmpty(message="O Campo email é Obrigatorio")
 	@Length(min=5,max=80)
 	private String email;
-	@NotEmpty(message="O Campo cpfOuCnpj é Obrigatorio")
-	@Length(min=5,max=80)
-	private String cpfOuCnpj;
 	public ClienteDTO() {
 		
 		super();
