@@ -34,6 +34,13 @@ public class ItemPedido implements Serializable {
 		this.quantidade = quantidade;
 		this.preco = preco;
 	}
+	
+	/** Metodo que calcula o total do pedido
+	 * OBS: O nome padrao get faz que o json receba o total
+	 */
+	public double getSubTotal() {
+		return (preco - desconto) * quantidade;
+	}
 
 	@JsonIgnore
 	public Pedido getPedido() {

@@ -1,8 +1,10 @@
 package com.cursomc.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -52,6 +54,22 @@ public class Pedido implements Serializable {
 		this.cliente = cliente;
 		this.enderecoDeEntrega = enderecoDeEntrega;
 	}
+	
+	
+
+	/** Metodo que calcula o total do pedido percorrendo a lista itens
+	 * e somando o valor OBS: O nome padrao get faz que o json receba o total
+	 */
+	public double getValorTotal() {
+		Double soma=0.0;
+		for (ItemPedido x : itens) {
+			soma+=x.getSubTotal();
+			
+		}
+		return soma;
+	}
+
+	
 
 	public Integer getId() {
 		return id;

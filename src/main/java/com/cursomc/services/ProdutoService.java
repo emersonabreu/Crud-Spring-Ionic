@@ -43,6 +43,10 @@ public class ProdutoService {
 
 	}
 	
+	/**
+	 *Metodo que busca os Produtos por nome e categoria 
+	 *OBS: É passada uma lista com os ids da categoria. 1,2,3,4,5
+	 */
 	public Page<Produto> search(String nome, List<Integer> ids, Integer page, Integer linesPerPage, String direction,
 			String orderBy) {
 
