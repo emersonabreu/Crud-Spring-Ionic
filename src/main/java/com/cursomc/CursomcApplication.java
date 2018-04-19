@@ -179,7 +179,7 @@ public class CursomcApplication implements CommandLineRunner {
 		p1.getItens().addAll(Arrays.asList(ip1));
 		p3.getItens().addAll(Arrays.asList(ip2));
 		
-		/*=================ItemPedido===Pedido====Produto=============*/
+		/*=================ItemPedidoPedidoProduto=============*/
 
 		itemPedidoRepository.saveAll(Arrays.asList(ip1, ip2));		
 	}
