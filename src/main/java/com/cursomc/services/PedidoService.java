@@ -43,6 +43,9 @@ public class PedidoService {
 
 	@Autowired
 	private ClienteService clienteService;
+	
+	@Autowired
+	private EmailService emailService;
 
 	public Pedido cadastrar(Pedido pedido) {
 		return pedidoRepository.save(pedido);
@@ -69,7 +72,7 @@ public class PedidoService {
 
 		for (ItemPedido ip : pedido.getItens()) {
 
-			ip.setDesconto(2.0);
+			ip.setDesconto(0.0);
 			// Como veio o id do Produto no na lista de ItemPedido
 			// , ele busca todos os dados desse Produto no banco e seta no ItemPedido
 			ip.setProduto(produtoService.buscaPorId(ip.getProduto().getId()));
@@ -78,7 +81,7 @@ public class PedidoService {
 		}
 
 		itemPedidoRepository.saveAll(pedido.getItens());
-		System.out.println(pedido);
+		emailService.sendOrderConfirmationEmail(pedido);
 		return pedido;
 
 	}
