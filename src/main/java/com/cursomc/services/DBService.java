@@ -20,6 +20,7 @@ import com.cursomc.domain.PagamentoComCartao;
 import com.cursomc.domain.Pedido;
 import com.cursomc.domain.Produto;
 import com.cursomc.domain.enums.EstadoPagamento;
+import com.cursomc.domain.enums.Perfil;
 import com.cursomc.domain.enums.TipoCliente;
 import com.cursomc.repositories.CategoriaRepository;
 import com.cursomc.repositories.CidadeRepository;
@@ -120,34 +121,45 @@ public class DBService {
 		/*================Estado=1==========N=Cidade====================*/
 		Estado est1 = new Estado(null, "Minas Gerais");
 		Estado est2 = new Estado(null, "São Paulo");
-		
+		Estado est3 = new Estado(null, "Goiás");
+
 		Cidade c1 = new Cidade(null, "Uberlândia", est1);
 		Cidade c2 = new Cidade(null, "São Paulo", est2);
 		Cidade c3 = new Cidade(null, "Campinas", est2);
+		Cidade c4 = new Cidade(null, "Inhumas", est3);
+
 		
 		est1.getCidades().addAll(Arrays.asList(c1));
 		est2.getCidades().addAll(Arrays.asList(c2, c3));
+		est3.getCidades().addAll(Arrays.asList(c4));
 		/*================Estado=1==========N=Cidade====================*/
 
-		estadoRepository.saveAll(Arrays.asList(est1, est2));
-		cidadeRepository.saveAll(Arrays.asList(c1, c2, c3));
+		estadoRepository.saveAll(Arrays.asList(est1, est2,est3));
+		cidadeRepository.saveAll(Arrays.asList(c1, c2, c3,c4));
 		
 		
 		/*================Cliente =1====Telefone======N=Endereco====================*/
 
-		Cliente cli1 = new Cliente(null, "Emerson Damiao", "vivianeabreu19216801@gmail.com", "36378912377",TipoCliente.PESSOAFISICA,pe.encode("12345"));
+		Cliente cli1 = new Cliente(null, "Emerson Damiao", "emersondamiaosouza@gmail.com", "36378912377",TipoCliente.PESSOAFISICA,pe.encode("12345"));
 		
 		cli1.getTelefones().addAll(Arrays.asList("27363323", "93838393"));
 		
+        Cliente cli2 = new Cliente(null, "Viviane Abreu", "vivianeabreu19216801@gmail.com", "73208949120",TipoCliente.PESSOAFISICA,pe.encode("6789"));
+		
+		cli2.getTelefones().addAll(Arrays.asList("3323000", "83937878"));
+		cli2.addPerfil(Perfil.ADMIN);
+		
 		Endereco e1 = new Endereco(null, "Rua Flores", "300", "Apto 303", "Jardim", "38220834", cli1, c1);
 		Endereco e2 = new Endereco(null, "Avenida Matos", "105", "Sala 800", "Centro", "38777012", cli1, c2);
+		Endereco e3 = new Endereco(null, "Rua Marechal Deodoro", "10", "Sala 5", "Centro", "38777012", cli2, c4);
+
 		
 		cli1.getEnderecos().addAll(Arrays.asList(e1, e2));
 		
 		/*================Cliente =1==========N=Endereco====================*/
 
-		clienteRepository.saveAll(Arrays.asList(cli1));
-		enderecoRepository.saveAll(Arrays.asList(e1, e2));
+		clienteRepository.saveAll(Arrays.asList(cli1,cli2));
+		enderecoRepository.saveAll(Arrays.asList(e1, e2,e3));
 	
 		/*================Pedido =1==========1=Pagamento====================*/
 		/*================Cliente =1==========N=Pedido====================*/
