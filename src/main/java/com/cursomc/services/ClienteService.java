@@ -1,7 +1,5 @@
 package com.cursomc.services;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,22 +8,18 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.cursomc.domain.Categoria;
 import com.cursomc.domain.Cidade;
 import com.cursomc.domain.Cliente;
 import com.cursomc.domain.Endereco;
-import com.cursomc.domain.Estado;
 import com.cursomc.domain.enums.TipoCliente;
-import com.cursomc.domain.Cliente;
 import com.cursomc.dto.ClienteDTO;
 import com.cursomc.dto.ClienteNewDTO;
-import com.cursomc.repositories.CidadeRepository;
 import com.cursomc.repositories.ClienteRepository;
 import com.cursomc.repositories.EnderecoRepository;
-import com.cursomc.repositories.EstadoRepository;
 import com.cursomc.services.exceptions.ObjectNotFoundException;
 
 /**
@@ -43,6 +37,9 @@ public class ClienteService {
 	
 	@Autowired
 	private EnderecoRepository enderecoRepository;
+	
+	@Autowired
+	private BCryptPasswordEncoder pe;
 	
 	/**
 	 * Metodo que busca a Cliente pelo sei id Ou se não encontrar o id, lança uma
@@ -169,7 +166,7 @@ public class ClienteService {
 	 */
 	public Cliente fromDTO(ClienteDTO clienteDTO ) {
 
-		return new Cliente(clienteDTO.getId(),clienteDTO.getNome(), clienteDTO.getEmail(),null,null);
+		return new Cliente(clienteDTO.getId(),clienteDTO.getNome(), clienteDTO.getEmail(),null,null,null);
 
 	}
 	
@@ -182,7 +179,7 @@ public class ClienteService {
 	 * ClienteInsertValidator
 	 */
 	public Cliente fromDTO(ClienteNewDTO objDto) {
-		Cliente cli = new Cliente(null, objDto.getNome(), objDto.getEmail(), objDto.getCpfOuCnpj(), TipoCliente.toEnum(objDto.getTipo()));
+		Cliente cli = new Cliente(null, objDto.getNome(), objDto.getEmail(), objDto.getCpfOuCnpj(),TipoCliente.toEnum(objDto.getTipo()),pe.encode(objDto.getSenha()));
 		Cidade cid = new Cidade(objDto.getCidadeId(), null, null);
 		Endereco end = new Endereco(null, objDto.getLogradouro(), objDto.getNumero(), objDto.getComplemento(), objDto.getBairro(), objDto.getCep(), cli, cid);
 		cli.getEnderecos().add(end);

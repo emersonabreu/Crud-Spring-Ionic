@@ -28,6 +28,11 @@ public class Cliente implements Serializable {
 	private String cpfOuCnpj;
 	private Integer tipo;
 	
+	/** Usa o @JsonIgnore pra não mostrar a senha no json quando recuperar o cliente 
+	 */
+	@JsonIgnore
+	private String senha;
+	
 	
 	/**
 	 * Relacionamento de Muitos pra 1 de Cliente pra Endereco.
@@ -52,7 +57,7 @@ public class Cliente implements Serializable {
 	public Cliente() {
 	}
 
-	public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipo) {
+	public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipo,String senha) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -62,8 +67,9 @@ public class Cliente implements Serializable {
 		 *Se tipo =null entao tipo recebe null senao tipo recebe o codigodotipo
 		 */
 		this.tipo =(tipo==null)? null : tipo.getCod();
+		this.senha= senha;
+		
 	}
-	
 	
 
 	public Integer getId() {
@@ -104,6 +110,14 @@ public class Cliente implements Serializable {
 
 	public void setTipo(TipoCliente tipo) {
 		this.tipo = tipo.getCod();
+	}
+	
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 	public List<Endereco> getEnderecos() {
