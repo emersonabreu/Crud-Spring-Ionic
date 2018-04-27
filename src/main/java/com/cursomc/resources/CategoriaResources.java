@@ -4,14 +4,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 
-import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -121,6 +120,7 @@ public class CategoriaResources {
 	 * Depois faz o inverso através do ResponseEntity, devolvendo o Objeto para o browser 
 	 * consome e produz JSON
 	 */
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(method=RequestMethod.POST, value="/salvar",
 	consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> cadastrar(@RequestBody Categoria categoria) {
@@ -151,8 +151,10 @@ public class CategoriaResources {
 
 		//End Points CONSOME JSON
 				/** Altera Categoria com Validação DTO
-				 * 
+				 * Só o usuario com perfil de admin pode Alterar Categoria com Validação DTO 
+				 * @PreAuthorize("hasAnyRole('ADMIN')")
 				 */
+		    @PreAuthorize("hasAnyRole('ADMIN')")
 			@RequestMapping(method=RequestMethod.PUT, value="/alterarComValidacao",
 					consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
 					public ResponseEntity<?> alterarCategoria(@Valid @RequestBody CategoriaDTO categoriaDTO) {
@@ -168,7 +170,9 @@ public class CategoriaResources {
 	//End Points CONSOME JSON
 		/** Altera Categoria com os tratamentos nos relacionamentos
 		 * usando o metodo update(Categoria categoria):
+		 * Só o usuario com perfil de admin tem permissão de alterar @PreAuthorize("hasAnyRole('ADMIN')")
 		 */
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(method=RequestMethod.PUT, value="/alterar",
 			consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
 			public ResponseEntity<Categoria> alterarCliente(@RequestBody Categoria categoria) {
@@ -182,7 +186,9 @@ public class CategoriaResources {
 	
 	/** Não PRODUZ NEM CONSOME JSON
 	 * Só exclui um objeto pelo seu id passado como parametro na url
+	 * Só o usuario com perfil de admin tem permissão deletar @PreAuthorize("hasAnyRole('ADMIN')")
 	 */
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(method=RequestMethod.DELETE, value="/{id}")
 	public ResponseEntity<Categoria> excluirCategoria(@PathVariable Integer id) {
 		

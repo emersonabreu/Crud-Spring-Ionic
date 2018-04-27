@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -125,8 +126,9 @@ public class ClienteResources {
 	/**
 	 * Metodo que traz uma lista de todas os Clientes e seus Produtos pega só os
 	 * clientes joga em outra lista e a retorna.
-	 * 
+	 * Só o administrador pode listar
 	 */
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(method = RequestMethod.GET, value = "/dto", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<ClienteDTO>> findAll() {
 
@@ -154,7 +156,9 @@ public class ClienteResources {
 	//
 	/**
 	 * End Points que faz a Paginação da Cliente
+	 * Só o adminisrador
 	 */
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(method = RequestMethod.GET, value = "/page", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Page<ClienteDTO>> buscaClientesPorPaginacao(
 			@RequestParam(value = "page", defaultValue = "0") Integer page,
@@ -176,8 +180,9 @@ public class ClienteResources {
 	// End Points CONSOME JSON
 	/**
 	 * Altera Cliente com Validação
-	 * 
+	 * Só o adminisrador
 	 */
+
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
 	public ResponseEntity<Cliente> alteraValidandoCliente(@Valid @RequestBody ClienteDTO clienteDTO,@PathVariable Integer id) {
 		Cliente clienteAlterado = clienteService.fromDTO(clienteDTO);
@@ -191,7 +196,7 @@ public class ClienteResources {
 	// End Points CONSOME JSON
 	/**
 	 * Altera Cliente 
-	 * 
+	 * Só o adminisrador
 	 */
 	@RequestMapping(method = RequestMethod.PUT, value = "/alterar", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Cliente> alterarCliente(@RequestBody Cliente cliente) {
@@ -203,7 +208,7 @@ public class ClienteResources {
 	
 	
 
-	/**
+	/**Só o adminisrador pode excluir
 	 * Não PRODUZ NEM CONSOME JSON Só exclui um objeto pelo seu id passado como
 	 * parametro na url
 	 */
