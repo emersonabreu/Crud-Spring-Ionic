@@ -19,10 +19,12 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.cursomc.security.JWTAuthenticationFilter;
+import com.cursomc.security.JWTAuthorizationFilter;
 import com.cursomc.security.JWTUtil;
 
 
 /** Classe configuração de Segurança
+ * OBS: Toda vez que faz o login essa classe é utilizada gerando um token novo
  */
 @Configuration
 @EnableWebSecurity
@@ -73,8 +75,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		/** Faz a autenticação do usuario
 		 */
 		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+		/** Faz a autorização do usuario
+		 */
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
+	
+	
 	
 	/** Disponibiliza o Bean que configura o basico pra aplicação
 	 */
