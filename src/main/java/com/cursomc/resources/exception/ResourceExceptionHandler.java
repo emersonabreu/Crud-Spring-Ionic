@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.cursomc.services.exceptions.AuthorizationException;
 import com.cursomc.services.exceptions.DataIntegrityException;
 import com.cursomc.services.exceptions.ObjectNotFoundException;
 
@@ -22,6 +23,8 @@ public class ResourceExceptionHandler {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
 	}
 	
+	/**  exceções de Integridade dos dados
+	 */
 	@ExceptionHandler(DataIntegrityException.class)
 	public ResponseEntity<StandardError> dataIntegrity(DataIntegrityException e, HttpServletRequest request) {
 		
@@ -29,6 +32,8 @@ public class ResourceExceptionHandler {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 	}
 	
+	/**  exceções de Validação
+	 */
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<StandardError> validation(MethodArgumentNotValidException e, HttpServletRequest request) {
 		
@@ -38,4 +43,15 @@ public class ResourceExceptionHandler {
 		}		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 	}
+	
+	/**  exceção de Autorização
+	 */
+	@ExceptionHandler(AuthorizationException.class)
+	public ResponseEntity<StandardError> authorization(AuthorizationException e, HttpServletRequest request) {
+		
+		StandardError err = new StandardError(HttpStatus.FORBIDDEN.value(), e.getMessage(), System.currentTimeMillis());
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
+	}
+
+	
 }

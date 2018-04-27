@@ -15,11 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cursomc.domain.Cidade;
 import com.cursomc.domain.Cliente;
 import com.cursomc.domain.Endereco;
+import com.cursomc.domain.enums.Perfil;
 import com.cursomc.domain.enums.TipoCliente;
 import com.cursomc.dto.ClienteDTO;
 import com.cursomc.dto.ClienteNewDTO;
 import com.cursomc.repositories.ClienteRepository;
 import com.cursomc.repositories.EnderecoRepository;
+import com.cursomc.security.UserSS;
+import com.cursomc.services.exceptions.AuthorizationException;
 import com.cursomc.services.exceptions.ObjectNotFoundException;
 
 /**
@@ -45,9 +48,18 @@ public class ClienteService {
 	 * Metodo que busca a Cliente pelo sei id Ou se não encontrar o id, lança uma
 	 * exceção
 	 */
-	public Cliente buscaPorId(Integer id) {
+	public Cliente buscaPorId(Integer id) {	
+		
+		/**Primeiro verifica as permissoes do usuário
+		 * se não tiver permissão ou se não for admin ou se o id do cliente for diferente ele 
+		 * não poderá acessar os dados de outro Cliente
+		 */
+		UserSS user = UserService.authenticated();
+		if (user==null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso negado");
+		}
 		Optional<Cliente> cliente = clienteRepository.findById(id);
-
+        
 		return cliente.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não Encontrado! id:" + id + ", Tipo: " + Cliente.class.getName()));
 
