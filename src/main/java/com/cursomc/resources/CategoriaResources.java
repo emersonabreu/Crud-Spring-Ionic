@@ -92,7 +92,7 @@ public class CategoriaResources {
 	
 	
 	
-	//
+	
 		/** 
 		* End Points que faz a Paginação da Categoria
 		*/

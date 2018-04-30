@@ -5,8 +5,12 @@ import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import com.cursomc.domain.Cliente;
 import com.cursomc.domain.ItemPedido;
 import com.cursomc.domain.PagamentoComBoleto;
 import com.cursomc.domain.Pedido;
@@ -15,7 +19,8 @@ import com.cursomc.repositories.ClienteRepository;
 import com.cursomc.repositories.ItemPedidoRepository;
 import com.cursomc.repositories.PagamentoRepository;
 import com.cursomc.repositories.PedidoRepository;
-import com.cursomc.repositories.ProdutoRepository;
+import com.cursomc.security.UserSS;
+import com.cursomc.services.exceptions.AuthorizationException;
 import com.cursomc.services.exceptions.ObjectNotFoundException;
 
 /**
@@ -43,6 +48,9 @@ public class PedidoService {
 
 	@Autowired
 	private ClienteService clienteService;
+	
+	@Autowired
+	private ClienteRepository clienteRepository;
 	
 	@Autowired
 	private EmailService emailService;
@@ -104,5 +112,25 @@ public class PedidoService {
 				"Objeto não Encontrado! id:" + id + ", Tipo: " + Pedido.class.getName()));
 
 	}
-
+	
+	/**
+	 * Metodo que usa o Pagedo Spring data para trazer os Pedidos do cliente e fazer a paginação.
+	 * Usando 4 parametros, que são a Pagina,Linhas por pagina,a Direção crescente ou decrescente e o tipo de ordenação.
+	 */
+	public Page<Pedido> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+		/** Vê se o usuario logado tem permissao
+		 */
+		UserSS user = UserService.authenticated();
+		if (user == null) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		Cliente cliente =  clienteService.buscaPorId(user.getId());
+		return pedidoRepository.findByCliente(cliente, pageRequest);
+	}
+	
+	
 }
+	
+
