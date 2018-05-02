@@ -1,5 +1,6 @@
 package com.cursomc.services;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.cursomc.domain.Cidade;
 import com.cursomc.domain.Cliente;
@@ -44,6 +46,9 @@ public class ClienteService {
 	@Autowired
 	private BCryptPasswordEncoder pe;
 	
+	@Autowired
+	private S3Service s3Service;
+	
 	/**
 	 * Metodo que busca a Cliente pelo sei id Ou se não encontrar o id, lança uma
 	 * exceção
@@ -66,6 +71,25 @@ public class ClienteService {
 	}
 	
 	
+	/**
+	 * Metodo que busca a Cliente pelo seu email Ou se não encontrar o email, lança uma
+	 * exceção
+	 */
+	public Cliente findByEmail(String email) {	
+		
+		/**Primeiro verifica as permissoes do usuário
+		 * se não tiver permissão ou se não for admin ou se o email do cliente for diferente ele 
+		 * não poderá acessar os dados de outro Cliente
+		 */
+		UserSS user = UserService.authenticated();
+		if (user==null || !user.hasRole(Perfil.ADMIN) && !email.equals(user.getUsername())) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		Cliente cliente = clienteRepository.findByEmail(email);
+        
+		return cliente;
+
+	}
 	
 	
 	public Cliente insert(Cliente cliente) {
@@ -218,7 +242,7 @@ public class ClienteService {
 	}
 	
 	
-
+	
 	
 
 }

@@ -1,5 +1,6 @@
 package com.cursomc.resources;
 
+import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,11 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.cursomc.domain.Cliente;
 import com.cursomc.dto.ClienteDTO;
 import com.cursomc.dto.ClienteNewDTO;
-import com.cursomc.dto.EmailDTO;
 import com.cursomc.services.ClienteService;
 
 /**
@@ -49,7 +50,18 @@ public class ClienteResources {
 	public ResponseEntity<?> find(@PathVariable Integer id) {
 		Cliente cliente = clienteService.buscaPorId(id);
 		return ResponseEntity.ok().body(cliente);
+		
+		
 
+	}
+	
+	/**
+	 * End Point Metodo que busca a cliente com todas as suas relaçoes pelo email
+	 */
+	@RequestMapping(value="/email", method=RequestMethod.GET)
+	public ResponseEntity<Cliente> find(@RequestParam(value="value") String email) {
+		Cliente obj = clienteService.findByEmail(email);
+		return ResponseEntity.ok().body(obj);
 	}
 	
 	
@@ -227,6 +239,8 @@ public class ClienteResources {
 		return new ResponseEntity<>(HttpStatus.OK);
 
 	}
+	
+	
 	
 	
 }
