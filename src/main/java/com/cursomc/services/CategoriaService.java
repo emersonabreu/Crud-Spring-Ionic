@@ -29,8 +29,8 @@ public class CategoriaService {
 	@Autowired
 	private CategoriaRepository categoriaRepository;
 
-	public Categoria cadastrar(Categoria categoria) {
-
+	public Categoria insert(Categoria categoria) {
+		categoria.setId(null);
 		return categoriaRepository.save(categoria);
 
 	}

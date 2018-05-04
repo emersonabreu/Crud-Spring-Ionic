@@ -1,4 +1,5 @@
 package com.cursomc.resources;
+import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.cursomc.domain.Categoria;
 import com.cursomc.dto.CategoriaDTO;
@@ -110,25 +112,7 @@ public class CategoriaResources {
 			return new ResponseEntity<Page<CategoriaDTO>> (listDTO,HttpStatus.OK);
 				
 		}
-	
-	
-	//End Points CONSOME JSON
-	/** Salva e Retorna o que Salvou
-	 * Metodo que pega o objeto JSON e salva no model cliente.
-	 * O @RequestBody lê o corpo do JSON e salva no objeto
-	 * Após salvar, joga ele dentro de um Map/lista
-	 * Depois faz o inverso através do ResponseEntity, devolvendo o Objeto para o browser 
-	 * consome e produz JSON
-	 */
-	@PreAuthorize("hasAnyRole('ADMIN')")
-	@RequestMapping(method=RequestMethod.POST, value="/salvar",
-	consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> cadastrar(@RequestBody Categoria categoria) {
-		Categoria categoriaCadastrada = categoriaService.cadastrar(categoria);
-		
-		return new ResponseEntity<>(categoriaCadastrada,HttpStatus.CREATED);
-			
-	}
+
 	
 	
 	//End Points CONSOME JSON
@@ -137,15 +121,14 @@ public class CategoriaResources {
 		 * @NotEmpty(message="Campo Obrigatorio")
 		 * @Length(min=5,max=80)
 		*/
-		@RequestMapping(method=RequestMethod.POST, value="/salvarComValidacao",
-		consumes=MediaType.APPLICATION_JSON_VALUE,produces=MediaType.APPLICATION_JSON_VALUE)
-		public ResponseEntity<?> cadastrar(@Valid @RequestBody CategoriaDTO categoriaDTO) {
-			/** Converte o CategoriaDTO em Categoria 
-			*/
-			Categoria categoriaCadastrada = categoriaService.fromDTO(categoriaDTO);
-			
-			return new ResponseEntity<>(categoriaCadastrada,HttpStatus.CREATED);
-				
+		@PreAuthorize("hasAnyRole('ADMIN')")
+		@RequestMapping(method=RequestMethod.POST)
+		public ResponseEntity<Void> insert(@Valid @RequestBody CategoriaDTO objDto) {
+			Categoria obj = categoriaService.fromDTO(objDto);
+			obj = categoriaService.insert(obj);
+			URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}").buildAndExpand(obj.getId()).toUri();
+			return ResponseEntity.created(uri).build();
 		}
 		
 
