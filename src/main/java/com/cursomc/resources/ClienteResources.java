@@ -242,5 +242,15 @@ public class ClienteResources {
 	
 	
 	
+	/**
+	 * EndPoint que salva a imagem no bucket na Amazon
+	 */
+	@RequestMapping(value="/picture", method=RequestMethod.POST)
+	public ResponseEntity<Void> uploadProfilePicture(@RequestParam(name="file") MultipartFile file) {
+		URI uri = clienteService.uploadProfilePicture(file);
+		return ResponseEntity.created(uri).build();
+	}
 	
+	
+
 }
