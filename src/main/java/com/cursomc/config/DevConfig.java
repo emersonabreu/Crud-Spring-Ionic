@@ -13,7 +13,7 @@ import com.cursomc.services.EmailService;
 import com.cursomc.services.SmtpEmailService;
 
 @Configuration
-@Profile("prod")
+@Profile("dev")
 public class DevConfig {
 
 	@Autowired
